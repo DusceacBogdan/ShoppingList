@@ -45,4 +45,19 @@ export const itemRouter = createTRPCRouter({
 
       return check;
     }),
+  editItem: publicProcedure
+    .input(z.object({ id: z.string(), newName: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const { id, newName } = input;
+      const edit = await ctx.prisma.shoppingItem.update({
+        where: {
+          id,
+        },
+        data: {
+          name: newName,
+        },
+      });
+
+      return edit;
+    }),
 });

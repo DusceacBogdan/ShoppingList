@@ -5,13 +5,16 @@ import Link from "next/link";
 import { useState } from "react";
 import ItemModel from "../components/itemModel";
 import { HiX } from "react-icons/hi";
-import { AiOutlineCheck } from "react-icons/Ai";
 import { api } from "../utils/api";
 import { motion } from "framer-motion";
+import { FaRegEdit } from "react-icons/fa";
 
 const Home: NextPage = () => {
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [modelOpen, setModelOpen] = useState<boolean>(false);
+  const [editInputValue, setEditInputValue] = useState<string>("");
+  const [editInput, setEditInput] = useState<boolean>(false);
+  const [inputId, setInputId] = useState<string>("");
 
   const { data: itemsData, isLoading } = api.items.getAll.useQuery("degeaba", {
     onSuccess(itemsList) {
@@ -26,6 +29,12 @@ const Home: NextPage = () => {
   });
 
   const { mutate: checkItem } = api.items.toggleCheckItem.useMutation({
+    onSuccess(item) {
+      setItems((prev) => prev.map((el) => (el.id === item.id ? item : el)));
+    },
+  });
+
+  const { mutate: editItem } = api.items.editItem.useMutation({
     onSuccess(item) {
       setItems((prev) => prev.map((el) => (el.id === item.id ? item : el)));
     },
@@ -60,31 +69,57 @@ const Home: NextPage = () => {
             return (
               <li
                 key={item.id}
-                className="flex w-full items-center justify-between"
+                className="flex w-full items-center justify-between py-0.5"
               >
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-0 flex origin-left items-center justify-center">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: item.checked ? "100%" : 0 }}
-                      transition={{ duration: 0.2, ease: "easeInOut" }}
-                      className="h-[2px] w-full translate-y-px bg-red-500"
+                {editInput && item.id === inputId ? (
+                  <input
+                    type="text"
+                    value={editInputValue}
+                    onChange={(event) => setEditInputValue(event.target.value)}
+                    className="w-40 rounded-md border-gray-300 bg-gray-200 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        setEditInput(false);
+                        editItem({ id: item.id, newName: editInputValue });
+                      }
+                    }}
+                  />
+                ) : (
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-0 flex origin-left items-center justify-center">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: item.checked ? "100%" : 0 }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        className="h-[2px] w-full translate-y-px bg-red-500"
+                      />
+                    </div>
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => {
+                        checkItem(item);
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </div>
+                )}
+                {!editInput && (
+                  <div className="flex">
+                    <FaRegEdit
+                      className="mr-2 cursor-pointer text-lg text-violet-400 hover:text-violet-700"
+                      onClick={() => {
+                        setEditInput(true);
+                        setInputId(item.id);
+                        setEditInputValue(item.name);
+                      }}
+                    />
+                    <HiX
+                      className="cursor-pointer text-lg text-red-500"
+                      onClick={() => deleteItem(item)}
                     />
                   </div>
-                  <span
-                    className="cursor-pointer"
-                    onClick={() => {
-                      checkItem(item);
-                    }}
-                  >
-                    {item.name}
-                  </span>
-                </div>
-
-                <HiX
-                  className="cursor-pointer text-lg text-red-500"
-                  onClick={() => deleteItem(item)}
-                />
+                )}
               </li>
             );
           })}
