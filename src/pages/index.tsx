@@ -40,7 +40,12 @@ const Home: NextPage = () => {
     },
   });
 
-  if (!itemsData || isLoading) return <p>Loading...</p>;
+  if (!itemsData || isLoading)
+    return (
+      <main className="flex h-screen items-center justify-center">
+        <div className="animate-spin text-3xl">Loading...</div>
+      </main>
+    );
   return (
     <>
       <Head>
