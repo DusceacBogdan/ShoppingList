@@ -32,7 +32,9 @@ export const itemRouter = createTRPCRouter({
   toggleCheckItem: publicProcedure
     .input(z.object({ checked: z.boolean(), id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      let { checked, id } = input;
+      let { checked } = input;
+      const { id } = input;
+
       checked = !checked;
       const check = await ctx.prisma.shoppingItem.update({
         where: {
