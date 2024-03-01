@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { FaRegEdit } from "react-icons/fa";
 
 const Home: NextPage = () => {
-  const [items, setItems] = useState<ShoppingItem[]>([]);
+  const [items, setItems] = useState<ShoppingItem[]>([] as ShoppingItem[]);
   const [modelOpen, setModelOpen] = useState<boolean>(false);
   const [editInputValue, setEditInputValue] = useState<string>("");
   const [editInput, setEditInput] = useState<boolean>(false);
@@ -37,6 +37,13 @@ const Home: NextPage = () => {
   const { mutate: editItem } = api.items.editItem.useMutation({
     onSuccess(item) {
       setItems((prev) => prev.map((el) => (el.id === item.id ? item : el)));
+    },
+    onMutate: ({ id, newName }) => {
+      const prevItems = items;
+      setItems((prev) =>
+        prev.map((el) => (el.id === id ? { ...el, name: newName } : el)),
+      );
+      return prevItems;
     },
   });
 
