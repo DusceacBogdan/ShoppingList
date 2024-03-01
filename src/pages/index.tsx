@@ -2,7 +2,7 @@ import { ShoppingItem } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ItemModel from "../components/itemModel";
 import { HiX } from "react-icons/hi";
 import { api } from "../utils/api";
@@ -15,6 +15,7 @@ const Home: NextPage = () => {
   const [editInputValue, setEditInputValue] = useState<string>("");
   const [editInput, setEditInput] = useState<boolean>(false);
   const [inputId, setInputId] = useState<string>("");
+  const editInputRef = useRef<HTMLInputElement>(null);
 
   const { data: itemsData, isLoading } = api.items.getAll.useQuery("degeaba", {
     onSuccess(itemsList) {
@@ -46,6 +47,11 @@ const Home: NextPage = () => {
       return prevItems;
     },
   });
+  useEffect(() => {
+    if (editInput && editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editInput]);
 
   if (!itemsData || isLoading)
     return (
@@ -53,6 +59,7 @@ const Home: NextPage = () => {
         <div className="animate-spin text-3xl">Loading...</div>
       </main>
     );
+
   return (
     <>
       <Head>
@@ -95,6 +102,7 @@ const Home: NextPage = () => {
                         editItem({ id: item.id, newName: editInputValue });
                       }
                     }}
+                    ref={editInputRef}
                   />
                 ) : (
                   <div className="relative">
