@@ -1,6 +1,5 @@
 
-
-https://github.com/DusceacBogdan/shopping/assets/66224685/8afd2e41-268d-4135-92ce-963d144dbe5f
+https://github.com/DusceacBogdan/shopping/assets/66224685/f4851442-eb15-4a02-91d6-53c7ed6eea51
 
 
 # Create T3 App
