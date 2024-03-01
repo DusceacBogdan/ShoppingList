@@ -1,5 +1,6 @@
-import { ShoppingItem } from "@prisma/client";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import type { ShoppingItem } from "@prisma/client";
+import type { Dispatch, FC, SetStateAction} from "react";
+import { useState } from "react";
 import { api } from "../utils/api";
 
 interface ItemModelProps {

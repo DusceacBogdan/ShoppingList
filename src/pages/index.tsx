@@ -1,7 +1,6 @@
-import { ShoppingItem } from "@prisma/client";
+import type { ShoppingItem } from "@prisma/client";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ItemModel from "../components/itemModel";
 import { HiX } from "react-icons/hi";
