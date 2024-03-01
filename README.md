@@ -1,3 +1,8 @@
+
+
+https://github.com/DusceacBogdan/shopping/assets/66224685/8afd2e41-268d-4135-92ce-963d144dbe5f
+
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
